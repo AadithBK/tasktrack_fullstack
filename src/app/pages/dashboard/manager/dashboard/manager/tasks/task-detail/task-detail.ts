@@ -19,7 +19,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { DialogModule } from 'primeng/dialog';
 // import {DropdownModule} from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-
+import { toast } from 'ngx-sonner';
 @Component({
   selector: 'app-task-detail',
   imports: [BackButtonComponent, HeaderComponent, CommonModule, DialogModule, ReactiveFormsModule],
@@ -57,6 +57,7 @@ export default class TaskDetail {
       },
       error: (err) => {
         console.log(err.error);
+        toast.error("Error Loading tasks")
       },
     });
   }
@@ -69,6 +70,7 @@ export default class TaskDetail {
       },
       error: (err) => {
         console.log(err.error);
+      toast.error("Error Loading tasks")
       },
     });
   }
@@ -93,9 +95,11 @@ export default class TaskDetail {
         });
 
         console.log(`Subtask ${subTaskId} updated to ${newStatus}`);
+        toast.success(`Subtask ${subTaskId} updated to ${newStatus}`)
       },
       error: (err) => {
         console.error('Failed to update subtask status', err);
+        toast.error('Failed to update subtask status ')
         // Optional: Show a toast notification here
       },
     });
@@ -178,6 +182,7 @@ onDelete(subTaskId: number) {
     this.taskService.deleteSubTask(currentTask.taskId, subTaskId).subscribe({
       next: () => {
         // Refresh the page to show the updated list and clear any UI state
+        toast.info("Sub task with id: " + subTaskId +  " was deleted" )
         this.task.update((prev) => {
         if (!prev) return null;
 
@@ -190,6 +195,7 @@ onDelete(subTaskId: number) {
       },
       error: (err) => {
         console.error('Failed to delete subtask', err);
+ toast.error('Failed to delete subtask')
       }
     });
   }
