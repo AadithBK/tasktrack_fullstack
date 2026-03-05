@@ -19,6 +19,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { DialogModule } from 'primeng/dialog';
 // import {DropdownModule} from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { toast } from 'ngx-sonner';
 import { CommentDto } from '../../../../../../../shared/models/comment.model';
 import { CommentService } from '../../../../../../../core/services/comment.service';
 @Component({
@@ -63,6 +64,7 @@ export default class TaskDetail {
       },
       error: (err) => {
         console.log(err.error);
+        toast.error("Error Loading tasks")
       },
     });
   }
@@ -75,6 +77,7 @@ export default class TaskDetail {
       },
       error: (err) => {
         console.log(err.error);
+      toast.error("Error Loading tasks")
       },
     });
   }
@@ -99,9 +102,11 @@ export default class TaskDetail {
         });
 
         console.log(`Subtask ${subTaskId} updated to ${newStatus}`);
+        toast.success(`Subtask ${subTaskId} updated to ${newStatus}`)
       },
       error: (err) => {
         console.error('Failed to update subtask status', err);
+        toast.error('Failed to update subtask status ')
         // Optional: Show a toast notification here
       },
     });
@@ -127,7 +132,6 @@ export default class TaskDetail {
 
   subtaskForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    assignedToUserId: new FormControl<number | null>(null, [Validators.required]),
     status: new FormControl('OPEN'),
   });
   
@@ -148,7 +152,6 @@ export default class TaskDetail {
   const formValues = this.subtaskForm.getRawValue();
   const payload: SubTaskCreateDTO = {
     title: formValues.title!,
-    assignedToUserId: formValues.assignedToUserId!,
     status: Status.Open,
     taskId: this.task()!.taskId,
   };
@@ -186,6 +189,7 @@ onDelete(subTaskId: number) {
     this.taskService.deleteSubTask(currentTask.taskId, subTaskId).subscribe({
       next: () => {
         // Refresh the page to show the updated list and clear any UI state
+        toast.info("Sub task with id: " + subTaskId +  " was deleted" )
         this.task.update((prev) => {
         if (!prev) return null;
 
@@ -198,6 +202,7 @@ onDelete(subTaskId: number) {
       },
       error: (err) => {
         console.error('Failed to delete subtask', err);
+ toast.error('Failed to delete subtask')
       }
     });
   }
