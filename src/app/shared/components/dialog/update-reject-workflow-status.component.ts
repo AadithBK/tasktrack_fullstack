@@ -7,6 +7,8 @@ import { UserResponseDto } from '../../models/user.model';
 import { form, FormField, min, required } from '@angular/forms/signals';
 import { WorkflowService } from '../../../core/services/workflow.service';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { toast } from 'ngx-sonner';
 // Matches the wireframe's intent for a new task
 
 
@@ -157,12 +159,13 @@ export class RejectWorkflowStepStatusComponent {
                 
            
         },
-        error: (err) => {
+        error: (err:HttpErrorResponse) => {
             //TODO add toast
+                   toast.error("Error Updating Status", {description: err.error.error})
             this.isLoading.update(v => !v);
         }
       })
-      this.isLoading.update(v => !v);
+
    
 
       // TODO sonnar error handling
